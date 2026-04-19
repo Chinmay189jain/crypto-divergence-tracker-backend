@@ -103,6 +103,7 @@ public class DivergenceDetector {
     }
 
     public static class Alert {
+        public final String id;
         public final String symbol;
         public final double priceChange;
         public final double sentimentScore;
@@ -114,6 +115,7 @@ public class DivergenceDetector {
         public AlertStatus status;
         public long resolvedAt;
         public Alert(String symbol, double priceChange, double sentimentScore, long lastTriggeredAt, Severity severity) {
+            this.id = buildId(symbol, lastTriggeredAt);
             this.symbol = symbol;
             this.priceChange = priceChange;
             this.sentimentScore = sentimentScore;
@@ -125,6 +127,10 @@ public class DivergenceDetector {
             this.status = AlertStatus.ACTIVE;
             this.resolvedAt = 0;
         }
+    }
+
+    private static String buildId(String symbol, long triggeredAt) {
+        return symbol + "-" + triggeredAt;
     }
 
     private static AlertType deriveType(double priceChange, double sentimentScore) {
